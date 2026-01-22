@@ -1,0 +1,21 @@
+{
+  "name": "questKoreanEditor",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "deploy": "npm run generate && npx gh-pages -d .output/public --dotfiles"
+  },
+  "dependencies": {
+    "gh-pages": "^6.3.0",
+    "gksdud": "^2.0.0",
+    "marked": "^17.0.1",
+    "nuxt": "^4.2.2",
+    "vue": "^3.5.27",
+    "vue-router": "^4.6.4"
+  }
+}
