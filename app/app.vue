@@ -3,11 +3,11 @@
     <div id="editor-wrapper">
       <div id="textArea">
         <div id="delete" class="button" v-on:click="deleteText">지우기</div>
-        <textarea v-model="eng" id="engText"></textarea>
+        <textarea @input="handleInput" id="engText"></textarea>
       </div>
       <div id="resultArea">
         <div id="copy" class="button" v-on:click="copyText">복사</div>
-        <div id="text" v-html="marked.parse(gksdudgks(eng))">
+        <div id="text" v-html="marked.parse(gksdudgks(eng))" :key="eng">
         </div>
       </div>
     </div>
@@ -19,6 +19,15 @@
   import { ref } from 'vue'
 
 const eng = ref('')
+
+const handleInput = async (event) => {
+  // event.target.value를 통해 조합 중인 텍스트도 실시간으로 가져옵니다.
+  eng.value = event.target.value
+  const currentScroll = document.querySelector('#text').scrollTop // 현재 위치 저장
+  
+  await nextTick()
+  document.querySelector('#text').scrollTop = currentScroll // 다시 복구
+}
 
 function gksdudgks(text) {
   let koresult = gksdud(text)
@@ -43,13 +52,17 @@ function copyText() {
 
 function deleteText() {
   eng.value = ''
+  document.querySelector('#engText').value = ''
   localStorage.setItem('engText', '')
 }
 
 if (process.client) {
   if (localStorage.getItem('engText')) {
-    eng.value = localStorage.getItem('engText')
+      eng.value = localStorage.getItem('engText')
+      document.querySelector('#engText').value = localStorage.getItem('engText').replace(/\\n/g, '\n')
+      document.querySelector('#text').innerHTML = marked.parse(gksdudgks(eng.value))
   }
+  
   document.querySelector('#engText').addEventListener('input', (e)=> {
     localStorage.setItem('engText', e.target.value)
   })
